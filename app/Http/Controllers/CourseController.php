@@ -11,7 +11,14 @@ class CourseController extends Controller
      */
     public function index()
     {
-        //
+        $courses = course::all();
+
+        if(request()->ajax()) {
+            return response()->json($courses);
+        }
+
+        return view('courses.index', compact('courses'));
+    }
     }
 
     /**
@@ -19,7 +26,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        //
+        return view('courses.index');
     }
 
     /**
@@ -27,7 +34,13 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $courses = Course::create($request->all());
+
+        if ($request->ajax()) {
+            return response()->json(['message' => 'Course added successfully!', 'course' => $course]);
+        }
+
+        return redirect()->route('course.index');
     }
 
     /**

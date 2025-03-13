@@ -11,7 +11,13 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        $students = Student::all();
+
+        if(request()->ajax()) {
+            return response()->json($students);
+        }
+
+        return view('students.index', compact('students'));
     }
 
     /**
@@ -19,7 +25,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
+        return view('students.index');
     }
 
     /**
@@ -27,7 +33,13 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $student = Student::create($request->all());
+
+        if ($request->ajax()) {
+            return response()->json(['message' => 'Student added successfully!', 'student' => $student]);
+        }
+
+        return redirect()->route('students.index');
     }
 
     /**
@@ -35,7 +47,10 @@ class StudentController extends Controller
      */
     public function show(string $id)
     {
-        //
+        
+        $student = Student::findOrFail($id);
+        return view('students.show', compact('student'));
+        
     }
 
     /**
@@ -43,7 +58,8 @@ class StudentController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $student = Student::findOrFail($id);
+        return view('students.show', compact('student'));
     }
 
     /**
@@ -51,7 +67,14 @@ class StudentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $student = Student::findOrFail($id);
+        $student->update($request->all());
+
+        if ($request->ajax()) {
+            return response()->json(['message' => 'Student updated successfully!', 'student' => $students]);
+        }
+
+        return redirect()->route('recipes.index');
     }
 
     /**
@@ -59,6 +82,13 @@ class StudentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $student = Student::findOrFail($id);
+        $student->delete();
+
+        if ($request->ajax()) {
+            return response()->json(['message' => 'Student deleted successfully!']);
+        }
+
+        return redirect()->route('students.index');
     }
 }
